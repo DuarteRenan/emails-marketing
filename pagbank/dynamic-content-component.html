@@ -1,0 +1,916 @@
+%%[
+  SET @nome = primeiro_nome
+  SET @p = '\d+'
+  SET @reg = RegExMatch(@nome, @p, 0)
+  SET @nome = ProperCase(@nome)
+
+  SET @John = ""
+
+  IF NOT EMPTY(@nome) AND EMPTY(@reg) THEN
+    SET @John = CONCAT(", ", @nome)
+  ENDIF
+  
+  SET @emailname = AttributeValue('emailname_')
+  SET @jobid = AttributeValue('jobid')
+  SET @batchid = AttributeValue('_JobSubscriberBatchID')
+  SET @cod_tracking = Lookup('SRC_CUSTOMER', 'cod_tracking', 'cod_customer', _SubscriberKey)
+
+  VAR @rawJson
+  SET @rawJson = AttributeValue("mrc_modelo")
+
+]%%
+<script runat="server">
+
+    var rawJson = Platform.Variable.GetValue("@rawJson");
+   rawJson = rawJson.replace(/\\"/g, '"');
+
+    if (rawJson) {
+
+        var produtosCliente = Platform.Function.ParseJSON(rawJson);
+
+      var catalogo = [
+    {
+        "PRODUTO_NBO": "Antecipacao de Recebiveis - Externos",
+        "title": "Fôlego extra para o seu dia a dia",
+        "text": "Antecipe o valor das suas vendas de qualquer maquininha no PagBank e aproveite ótimas condições para agilizar a rotina do seu negócio.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fanticipation&af_web_dp=https://minhaconta.pagbank.com.br/meu-negocio/antecipacao-de-recebiveis&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Simular antecipação",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon7.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Antecipação de Recebíveis",
+        "title": "Fôlego extra para o seu dia a dia",
+        "text": "Antecipe o valor das suas vendas das amarelinhas PagBank e aproveite ótimas condições para agilizar a rotina do seu negócio.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fanticipation&af_web_dp=https://minhaconta.pagbank.com.br/meu-negocio/antecipacao-de-recebiveis&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Antecipe agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group214.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Aquisição de Terminal",
+        "title": "As amarelinhas mais amadas do Brasil",
+        "text": "Conte com as maquininhas do PagBank para turbinar as vendas do seu negócio.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=maquina&af_dp=psmyaccount://store?origin=email\&utms=campaign=%%emailname_%%,content=%%jobid%%-%%_JobSubscriberBatchID%%,medium=email,term=maquininhas&af_web_dp=https%3A%2F%2Fminhaconta.pagbank.com.br%2Fin-store%2Fmaquininhas&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=maquina&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Pedir maquininha",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group215.png"
+    },
+  {
+    "PRODUTO_NBO": "CDB - Aplicação",
+    "title": "Faça seu dinheiro render com o CDB PagBank",
+    "text": "Aplicação simples e direto ao ponto pra você começar (ou continuar) a investir do seu jeito.",
+    "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&amp;c=%%emailname_%%&amp;af_channel=email&amp;af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&amp;af_ad=inv-cdb-in&amp;utm_source=appsflyer-crm-v1&amp;utm_medium=email&amp;utm_campaign=%%emailname_%%&amp;utm_term=inv-cdb-in&amp;utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&amp;af_dp=psmyaccount%3A%2F%2Finvestment-product-fixed_income&amp;af_web_dp=https://minhaconta.pagbank.com.br/servicos-financeiros/investir/renda-fixa&amp;af_force_deeplink=true&amp;ct=%%=RedirectTo(@cod_tracking)=%%",
+    "btnText": "Investir em CDB",
+    "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group2228.png"
+  },
+  {
+    "PRODUTO_NBO": "CDB 130 - Aplicação",
+    "title": "Turbine seus rendimentos com o CDB PagBank 130% do CDI",
+    "text": "Uma opção pra quem quer buscar mais rentabilidade e ver o dinheiro trabalhar por você.",
+    "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&amp;c=%%emailname_%%&amp;af_channel=email&amp;af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&amp;af_ad=inv-cdb-in&amp;utm_source=appsflyer-crm-v1&amp;utm_medium=email&amp;utm_campaign=%%emailname_%%&amp;utm_term=inv-cdb-in&amp;utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&amp;af_dp=psmyaccount%3A%2F%2Finvestment-product-details%3Fr%3DFIXED_INCOME%26c%3Db2398d4a-c459-4497-bd67-66e4d03c1ec8&amp;af_web_dp=https%3A%2F%2Fminhaconta.pagbank.com.br%2Fservicos-financeiros%2Finvestir%2Frenda-fixa%2Fb2398d4a-c459-4497-bd67-66e4d03c1ec8%3FissueType%3DOWN_CDB&amp;af_force_deeplink=true&amp;ct=%%=RedirectTo(@cod_tracking)=%%",
+    "btnText": "Aplicar agora",
+    "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group2228.png"
+  },
+
+    {
+        "PRODUTO_NBO": "Cartao Multiplo Visa - Trilha Debito e Credito",
+        "title": "Cartão Cartão PagBank Visa: débito e crédito no mesmo cartão",
+        "text": "Mais praticidade para as compras do dia a dia, com controle direto no app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fcards&af_web_dp=https://minhaconta.pagbank.com.br/hub/menu/cartoes&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Peça grátis",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group226.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Cartão Pré-Pago",
+        "title": "Cartão Pré-Pago: mais controle de gastos",
+        "text": "Carregue o valor que quiser e use com segurança em compras presenciais e online.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fcards&af_web_dp=https://minhaconta.pagbank.com.br/hub/menu/cartoes&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Solicitar cartão",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group1226.png"
+    },
+
+    {
+        "PRODUTO_NBO": "DDA",
+        "title": "Facilite a organização das suas contas",
+        "text": "Habilite o Buscador de Boletos DDA no app e encontre todos os boletos cadastrados no seu CPF/CNPJ em segundos.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=pc-dda-cdr2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=pc-dda-cdr2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fdda&af_web_dp=https://minhaconta.pagbank.com.br/conta-digital/dda&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Ativar agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Step22.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Débito Automático",
+        "title": "Débito Automático: esqueça atrasos",
+        "text": "Ative a função em poucos cliques e organize suas contas recorrentes com mais praticidade.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=pc-da-cd2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=pc-da-cd2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fautomatic_debit&af_web_dp=https://faq.pagbank.com.br/duvida/o-que-e-e-como-autorizar-o-debito-automatico/1445&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Ativar agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group231.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Emprestimo K-Giro",
+        "title": "Empréstimo K-Giro: crédito para manter o ritmo",
+        "text": "Uma força extra para organizar as contas e tocar seus planos com tranquilidade e as melhores condições.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=kgiro&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=kgiro&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fshelf_loans%3Fr%3DOFFER&af_web_dp=https%3A%2F%2Ffaq.pagbank.com.br%2Fduvida%2Fcomo-funciona-o-emprestimo-do-pagbank%2F575&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Simular crédito",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group231.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Empréstimo Consignado - FGTS",
+        "title": "Dinheiro na conta sem complicação",
+        "text": "Antecipe o seu Saque-Aniversário FGTS no PagBank e tenha alívio financeiro em poucos cliques.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=emp-fgt-ant&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=emp-fgt-ant&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Floan_fgts&af_web_dp=https://pagseguro.uol.com.br/conta-digital/saque-aniversario-fgts&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Simular crédito",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group231.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Folha de Pagamento",
+        "title": "Folha de Pagamento",
+        "text": "Organize e agilize o pagamento de todos os seus funcionários em poucos cliques com essa ferramenta grátis do PagBank.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fpayroll&af_web_dp=https://minhaconta.pagbank.com.br/conta-digital/folha-pagamento&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Comece a usar",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon8.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Fundos - Aplicação",
+        "title": "Diversifique sua carteira com praticidade",
+        "text": "Os Fundos de Investimento são uma forma fácil de variar sua estratégia e investir com mais opções em um só lugar.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=inv-fnd-in&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=inv-fnd-in&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finvestment-product-funds&af_web_dp=https://minhaconta.pagbank.com.br/servicos-financeiros/investir/fundos-de-investimento&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Ver Fundos",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon9.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Gestão de Cobrança - Boleto",
+        "title": "Gestão de Cobranças via Boleto: organize seus recebimentos",
+        "text": "Até 100 cobranças grátis por mês com taxa fixada em R$ 1,99 após atingir o limite de gratuidade e muito mais.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fbilling%26product%3Dbank-slip&af_web_dp=https://minhaconta.pagbank.com.br/conta-digital/cobrancas&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Gerar cobrança",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon10.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Gestão de Cobrança - PIX",
+        "title": "Cobre seus clientes e receba na hora",
+        "text": "Crie suas cobranças de forma ágil e gratuita direto pelo app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=cobrancaqrcodepix&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=cobrancaqrcodepix&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fbilling%3Fproduct%3Dpix&af_web_dp=https%3A%2F%2Fminhaconta.pagbank.com.br%2Fconta-digital%2Fcobrancas&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Gerar cobrança",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group230.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Link de Pagamento",
+        "title": "Venda online em segundos",
+        "text": "Crie seu Link de Pagamento em segundos e compartilhe com seus clientes nas redes sociais que quiser.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&af_channel=email&af_ad=lk-lik-cr&utm_source=appsflyer-crm-v1&utm_medium=email&utm_term=lk-lik-cr&af_dp=psmyaccount%3A%2F%2Flink-de-pagamento&af_web_dp=https%3A%2F%2Fminhaconta.pagbank.com.br%2Fvenda-online%2Flink-de-pagamento&af_force_deeplink=true&c=%%=RedirectTo(@emailname)=%%&af_adset=%%=RedirectTo(@jobid)=%%-%%=RedirectTo(@batchid)=%%&utm_campaign=%%=RedirectTo(@emailname)=%%&utm_content=%%=RedirectTo(@jobid)=%%-%%=RedirectTo(@batchid)=%%&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Criar link",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Maskgroup3.png"
+    },
+
+    {
+        "PRODUTO_NBO": "PIX - Chaves Fortes",
+        "title": "Mais segurança para suas movimentações",
+        "text": "Cadastre suas chaves Pix (Celular, CPF ou CNPJ) e garanta mais proteção e praticidade na sua rotina.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=px-ch-cd&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=px-ch-cd&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fpix&af_web_dp=https://minhaconta.pagbank.com.br/conta-digital/pix&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Gerenciar chaves",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group230.png"
+    },
+
+    {
+        "PRODUTO_NBO": "PIX - QRCode",
+        "title": "Cobre seus clientes de maneira rápida e prática",
+        "text": "Gere suas cobranças via Pix e QR Code Pix e receba seu dinheiro na hora.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=qrcode&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=qrcode&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fpix_receivement_qrcode&af_web_dp=https%3A%2F%2Ffaq.pagbank.com.br%2Fduvida%2Fcomo-vender-com-pix%2F1124&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Gerar cobrança",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon11.png"
+    },
+
+    {
+
+        "PRODUTO_NBO": "Pagamento de Contas - Cartão",
+        "title": "Pague contas em até 12x com cartão",
+        "text": "Use o cartão para pagar contas e organize sua rotina financeira com mais praticidade.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=pc-bl-pg2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=pc-bl-pg2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fpayment_slip_balance_credit_card&af_web_dp=https://faq.pagbank.com.br/duvida/posso-parcelar-o-pagamento-de-contas-com-cartao-de-credito/1030&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Pagar conta",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon12.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Pagamento de Contas - Detran",
+        "title": "Contas do Detran sem complicação",
+        "text": "Sem filas nem burocracia. Resolva seu IPVA, licenciamento de veículo e outras taxas do Detran direto pelo app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=pc-bl-pg2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=pc-bl-pg2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fdetran&af_web_dp=https://faq.pagbank.com.br/duvida/como-fazer-pagamento-de-debitos-do-detran-sp/791&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Pagar agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon13.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Pagamento de Contas - Saldo",
+        "title": "Pague suas contas sem complicação",
+        "text": "Resolva boletos e contas em poucos cliques, sem fila e sem estresse.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=pc-bl-pg2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=pc-bl-pg2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2FpaymentSlip&af_web_dp=https://minhaconta.pagbank.com.br/conta-digital/pagar-contas&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Pagar conta",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon14.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Portabilidade de Salários",
+        "title": "Seu salário rende mais no PagBank",
+        "text": "Solicite sua portabilidade de salário e libere vantagens e serviços exclusivos na sua conta.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%25%25emailname_%25%25&af_channel=email&af_adset=%25%25jobid%25%25-%25%25_JobSubscriberBatchID%25%25&af_ad=ptb-slr-slt&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%25%25emailname_%25%25&utm_term=ptb-slr-slt&utm_content=%25%25jobid%25%25-%25%25_JobSubscriberBatchID%25%25&af_dp=psmyaccount%3A%2F%2FsalaryPortability&af_web_dp=https://pagseguro.uol.com.br/conta-digital/portabilidade-de-salario&af_force_deeplink=true&ct=%25%25=RedirectTo(@cod_tracking)=%25%25",
+        "btnText": "Trazer salário",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon1.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga Bilhete Único",
+        "title": "Recarga de Bilhete Único",
+        "text": "Coloque créditos no transporte público direto pelo app, de forma rápida.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%25%25emailname_%25%25&af_channel=email&af_adset=%25%25jobid%25%25-%25%25_JobSubscriberBatchID%25%25&af_ad=rec-blu-rcg&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%25%25emailname_%25%25&utm_term=rec-blu-rcg&utm_content=%25%25jobid%25%25-%25%25_JobSubscriberBatchID%25%25&af_dp=psmyaccount%3A%2F%2FservicesStore%3Fr%3D4&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga-bilhete-unico&af_force_deeplink=true&ct=%25%25=RedirectTo(@cod_tracking)=%25%25",
+        "btnText": "Fazer recarga",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group212.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga Games",
+        "title": "Recarga nos seus apps e games favoritos",
+        "text": "Compre créditos para Google Play, Spotify, TV, Uber e muito mais em poucos cliques no app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=rec-blu-rcg&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=rec-blu-rcg&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2FservicesStore%3Fr%3D4&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga-bilhete-unico&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Fazer recarga",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group213.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga Google Play",
+        "title": "Recarga Google Play",
+        "text": "Compre créditos para seus app favoritos com muita praticidade, sem precisar de cartão, usando apenas o saldo da sua conta PagBank.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=rec-gpl-rcg&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=rec-gpl-rcg&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2FservicesStore%3Fr%3D24&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Recarregue agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon2.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga Spotify",
+        "title": "Recarga Spotify",
+        "text": "Curta suas músicas favoritas para trabalhar, correr, arrumar a casa ou viajar sem anúncios, mesmo se estiver sem internet! ",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=rec-spt-rcg&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=rec-spt-rcg&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2FservicesStore%3Fr%3D23&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Recarregue agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Abr/Ciclo_de_vida/s3p1/Multiprodutos_ServicosDaConta_Reativacao425dias/spotify.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga TV",
+        "title": "Recarga de TV Pré-Paga",
+        "text": "Mantenha sua TV por assinatura em dia pelo app PagBank e ainda aproveite todas as vantagens de um banco completo. Disponível para Oi TV, Claro TV e Sky Pré-Pago.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=tapon-pagamentos&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=tapon-pagamentos&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fcampaign_offer_product&af_web_dp=https%3A%2F%2Fpagbank.com.br%2Fconta-digital%2Fconta-digital-gratis&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Recarregue agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon3.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga Uber",
+        "title": "Recarga de Uber",
+        "text": "Seu próximo destino é a praticidade. Compre créditos para a Uber direto no app PagBank e aproveite a facilidade de resolver tudo pelo celular em poucos cliques. ",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=rec-ubr-rcg&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=rec-ubr-rcg&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2FservicesStore%3Fr%3D25&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Recarregue agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon4.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Recarga de Celular",
+        "title": "Recarga de Celular: rapidinho, direto no app",
+        "text": "Coloque créditos quando e onde precisar com muita agilidade, praticidade e segurança.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=rec-cel-rc2&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=rec-cel-rc2&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Fcredit_phone_recharge&af_web_dp=https://pagseguro.uol.com.br/conta-digital/recarga&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Fazer recarga",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group1212.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Renda Variável - Aplicação",
+        "title": "Saia do básico com investimentos em Renda Variável",
+        "text": "Explore alternativas e acompanhe as melhores oportunidades direto pelo app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finvestment-product-stockmarket&af_web_dp=https://minhaconta.pagbank.com.br/hub&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Investir agora",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group218.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Seguros - Cartão",
+        "title": "PagBank Seguro Cartão Protegido",
+        "text": "Garanta uma proteção extra em caso de perda, roubo ou furto do seu cartão do PagBank.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance%3Fr%3DPLATFORM_ACCOUNT_CARD%26c%3DWELCOME_KIT&af_web_dp=https://pagseguro.uol.com.br/conta-digital/seguros-e-saude/seguro-cartao-protegido&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon5.png"
+    },
+    
+
+    {
+        "PRODUTO_NBO": "Seguros - PIX",
+        "title": "PagBank Seguro Pix",
+        "text": "Evite prejuízos financeiros causados por transações via Pix feitas sob ameaça.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=seg-px-con&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=seg-px-con&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance?r%3DPLATFORM_INSURED_ACCOUNT&af_web_dp=https://pagseguro.uol.com.br/conta-digital/seguros-e-saude/seguro-pix-pagbank&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon1.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Seguros - Celular",
+        "title": "PagBank Seguro Celular",
+        "text": "Proteja seu celular contra danos e outros imprevistos do dia a dia por um preço acessível e contratação simplificada.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&af_channel=email&af_ad=seguro-celular-contratar&utm_source=appsflyer-crm-v1&utm_medium=email&utm_term=seguro-celular-contratar&af_dp=psmyaccount%3A%2F%2Finsurance%3Fr%3DPLATFORM_CELLPHONE%26c%3DCRM&af_web_dp=https%3A%2F%2Fpagbank.com.br%2Fconta-digital%2Fseguros-e-saude%2Fseguro-celular&af_force_deeplink=true&c=%%=RedirectTo(@emailname)=%%&af_adset=%%=RedirectTo(@jobid)=%%-%%=RedirectTo(@batchid)=%%&utm_campaign=%%=RedirectTo(@emailname)=%%&utm_content=%%=RedirectTo(@jobid)=%%-%%=RedirectTo(@batchid)=%%&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group227.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Seguros - Empresarial",
+        "title": "PagBank Seguro Empresarial",
+        "text": "Mantenha seu negócio de portas abertas todos os dias e proteja seu patrimônio.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=seg-emp-con&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=seg-emp-con&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance?r%3DPLATFORM_BUSINESS&af_web_dp=https://pagseguro.uol.com.br/para-seu-negocio/solucoes-empresariais/seguro-empresarial&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group227.png"
+    },
+
+  
+    {
+        "PRODUTO_NBO": "Seguros - Residência",
+        "title": "PagBank Seguro Residência",
+        "text": "Cuidado e proteção que o seu lar merece, com contratação simples e rápida direto pelo app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=seg-res-con&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=seg-res-con&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance?r%3DPLATFORM_RESIDENTIAL&af_web_dp=https://pagseguro.uol.com.br/conta-digital/seguros-e-saude/seguro-residencia&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group227.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Seguros - Saúde",
+        "title": "Saúde e bem-estar cabem no seu bolso",
+        "text": "Contrate o PagBank Saúde e tenha acesso aos melhores cuidados, exames e profissionais por um preço justo.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=seg-sal-con&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=seg-sal-con&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance%3Fr%3DPLATFORM_HEALTH&af_web_dp=https://pagseguro.uol.com.br/conta-digital/seguros-e-saude/saude&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Cuide da sua saúde",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group227.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Seguros - Vida",
+        "title": "PagBank Seguro de Vida é o cuidado que cabe na rotina",
+        "text": "Mais proteção para você e sua família com contratação simples e rápida direto pelo app.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=seg-pes-con&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=seg-pes-con&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finsurance%3Fr%3DPLATFORM_ACCIDENT&af_web_dp=https://pagseguro.uol.com.br/conta-digital/seguros-e-saude/seguro-de-vida&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Contratar seguro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group227.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Tap on",
+        "title": "Transforme seu celular em maquininha com o Tap On",
+        "text": "Venda por aproximação sem complicação usando só o seu celular.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&af_ad=tapon&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_term=tapon&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Ftap_on_flow&af_web_dp=https%3A%2F%2Ffaq.pagbank.com.br%2Fduvida%2Fcomo-vender-com-o-tap-on%2F2013&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Ativar Tap On",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/icon6.png"
+    },
+
+    {
+        "PRODUTO_NBO": "Tesouro Direto - Aplicação",
+        "title": "Estabilidade para o seu planejamento",
+        "text": "Invista no Tesouro Direto e aproveite previsibilidade na organização dos seus objetivos.",
+        "btnLink": "https://pagbank.onelink.me/Dzpm?pid=CRM&c=%%emailname_%%&af_channel=email&af_adset=%%jobid%%-%%_JobSubscriberBatchID%%&utm_source=appsflyer-crm-v1&utm_medium=email&utm_campaign=%%emailname_%%&utm_content=%%jobid%%-%%_JobSubscriberBatchID%%&af_dp=psmyaccount%3A%2F%2Finvestment-product-government_bond&af_web_dp=https://minhaconta.pagbank.com.br/hub&af_force_deeplink=true&ct=%%=RedirectTo(@cod_tracking)=%%",
+        "btnText": "Investir no Tesouro",
+        "figure": "https://p.simg.uol.com.br/crm/2026/Jan/CicloDeVida/s4p1/CicloDeVida_Maturacao_ReguaPilotoPJSMB_Janeiro26/Email/Generico/Q1Q2Q3Q4/Group1228.png"
+    }
+];
+
+        produtosCliente.sort(function (a, b) {
+            return a.POSICAO_NBO - b.POSICAO_NBO;
+        });
+
+        var html = "";
+        var catalogoMapeado = {};
+        var beneficios = {};
+
+        for (var j = 0; j < catalogo.length; j++){
+          catalogoMapeado[catalogo[j].PRODUTO_NBO] = catalogo[j];
+        }
+       
+
+       for (var i = 0; i < produtosCliente.length; i++) {
+    var produtoNBO = produtosCliente[i].PRODUTO_NBO;
+    var produto = catalogoMapeado[produtoNBO];
+
+    if (produto) {
+
+        // BLOCO 1 — Abre o card, ícone, título e texto
+        html += Platform.Function.TreatAsContent(
+            '%%=BeginImpressionRegion("' + produto.PRODUTO_NBO + '")=%%' +
+                       '<tr style="font-size: 0;">' +
+              '<td style="padding: 3px 0;">' +
+                '<table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; background-color: #ececec;">' +
+                '<tr style=" font-size: 0px;">' +
+                  '<td width="2.5%" style="line-height: 0; font-size: 0;"></td>' +
+                  '<td width="95%" style="padding: 16px 0px; font-size: 0px; mso-line-height-rule: exactly; line-height: 1;">'+
+                  
+                   ' <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: top; margin: 0px; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; ">'+
+                        '<tr style="font-size: 0">'+
+                        '<td width="119" class="w-full" style="vertical-align: top; font-size: 0px; mso-line-height-rule: exactly; display: inline-block; ">'+
+                          '<table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: top; margin: 0px; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">'+
+                            '<tr style="font-size: 0;">'+
+                              '<td width="7.5"></td>'+
+                              '<td class="" style="font-size: 0; padding: 0px 0;">'+
+                               ' <img class="mx-auto" src="' + produto.figure + '" alt="" border="0" width="104" style="width: 100%; max-width: 104px; height: auto;  border: 0px; display: block; margin: 0px; -ms-interpolation-mode: bicubic; -ms-interpolation-mode: nearest-neighbor; line-height: 100%;">'+
+                              '</td>'+
+                             ' <td width="7.5"></td>'+
+                          '</tr>'+
+                          '</table>'+
+                       ' </td>'+
+                        '<td width="421" class="w-full" style="width: 100%; max-width: 421px; font-size: 0; mso-line-height-rule: exactly; vertical-align: middle; display: inline-block; ">'+
+                          '<table class="w-full" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: top; margin: 0px; width: 100%; max-width: 420px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; color: #545454;">'+
+                          '<tr style="font-size: 0;">'+
+                           ' <td width="7.5"></td>'+
+                           ' <td style="font-size: 0; padding: 12px 0 0px;">'+
+                              '<h3 class="fs-18 text-center" style="margin: 0px 0px 4px; font-size: 18px; text-align: left; line-height: 26px; color: #292929;">' +
+                                produto.title +
+                            '  </h3>'+
+                             ' <div class="fs-16 text-center" style="font-size: 18px; line-height: 26px;">' +
+                                produto.text +
+                              '</div>'+
+                         '   </td>'+
+                            '<td width="7.5"></td>'+
+                         ' </tr>'+
+                         ' <tr style="font-size: 0;">'+
+                            '<td width="7.5"></td>'+
+                           ' <td style="font-size: 0; padding: 16px 0 12px;">'+
+                           ' <div class="text-center" style="text-align: left; margin: 0px 0 0;">'+
+                              '  <!--[if mso | IE]>' +
+                                                                   ' <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width: 200px; height: 45px; v-text-anchor: middle;" arcsize="50%" fillcolor="#4F5DA6">' +
+                                                                       ' <w:anchorlock/>' +
+                                                                       ' <center style="color:#ffffff; font-family: Arial, sans-serif; font-size:19px; font-weight:600;">'+
+                                                                  '  <![endif]-->' +
+                               ' <a class="btn-cta" href="httpgetwrap|' + produto.btnLink + '" style="background-color: #4F5DA6; color:#ffffff; text-decoration: none; font-size: 16px; font-weight: 600; font-family: Arial, sans-serif; padding: 12px 26px; border-radius: 32px; display: inline-block; " target="_blank" aria-label="produto.btnLink" alias="' + produto.PRODUTO_NBO + '">' +
+                                                                    produto.btnText +
+                                                                  '  </a>'+
+                             '   <!--[if mso | IE]>'+
+                                                                       ' </center>'+
+                                                                   ' </v:roundrect>'+
+                                                                   ' <![endif]-->'+
+                             ' </div>'+
+                           ' </td>'+
+                           ' <td width="7.5"></td>'+
+                        '  </tr>'+
+                         ' </table>'+
+                            
+                       ' </td>'+
+                     ' </tr>'+
+                      '  </table>'+
+
+                
+      
+                  '</td>'+
+                  '<td width="2.5%" style="line-height: 0; font-size: 0;"></td>'+
+              '  </tr>'+
+              '</table>'+
+             ' </td>'+
+            '</tr>'+
+            '%%=EndImpressionRegion()=%%'
+        );
+    }
+}
+
+        Platform.Variable.SetValue("@produtosHTML", html);
+
+    } else {
+
+        Platform.Variable.SetValue("@produtosHTML", "<tr><td>Nenhum produto encontrado</td></tr>");
+
+    }
+
+</script>
+<!DOCTYPE html>
+<html xml:lang="pt-BR" lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta http-equiv="Content-Type" content="text/html, charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=9, IE=8, IE=7, IE=EDGE" />
+  <meta name="format-detection" content="telephone=no, address=no, date=no, email=no">
+  <meta name="x-apple-disable-message-reformatting">
+  <style type="text/css">
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      height: 100% ;
+      margin: 0 auto;
+      padding: 0 ;
+      width: 100% ;
+      -WEBkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      word-spacing: normal;
+    }
+    a {
+      text-decoration: none;
+    }
+    h1, h2, h3, h4 {
+      font-size: 18px;
+      line-height: 26px;
+      margin: 0;
+    }
+    p {
+      text-align: left;
+      line-height: 28px;
+      margin: 0;
+    }
+    table {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+      -WEBkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    img {
+      border: 0;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      display: block;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    @media only screen and (max-width: 640px) {
+      .fs-16 {
+        font-size: 16px !important;
+        line-height: 140% !important;
+      }
+      .fs-18 {
+        font-size: 18px !important;
+        line-height: 130% !important;
+      }
+      .fs-20 {
+        font-size: 20px !important;
+        line-height: 120% !important;
+      }
+      .fs-22 {
+        font-size: 22px !important;
+        line-height: 120% !important;
+      }
+    
+      .text-center {
+        text-align: center !important;
+      }
+    
+      .show-mobile {
+        display: block !important;
+        width: 100% !important;
+        overflow: visible !important;
+        float: none !important;
+        max-height: inherit !important;
+        line-height: auto !important;
+        margin-top: 0px !important;
+        visibility: inherit !important;
+      }
+   
+      .hide-mobile {
+        display: none !important;
+        overflow: hidden !important;
+        float: left !important;
+        width: 0px !important;
+        max-height: 0px !important;
+        max-width: 0px !important;
+        line-height: 0px !important;
+        visibility: hidden;
+      }
+
+      .w-full {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    
+
+      .pd-header {
+        padding: 12px 5% !important;
+      }
+   
+      .mx-auto {
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+    
+    }
+  </style>
+</head>
+<body style="background-color: #f7f7f7;">
+<custom name="opencounter" type="tracking"/>
+  <div role="article" aria-roledescription="email" xml:lang="pt-BR" lang="pt-BR" style="background-color:#f7f7f7;">
+    <div style="display: none!important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all;">
+      <!-- snippet -->
+ A eficiência espera por você. Conheça os recursos exclusivos que trazem mais organização e controle para sua operação.
+    </div>
+    <!--[if (gte mso 9)|(IE)|(mso 16)|(mso)]>
+    <table cellspacing="0" cellpadding="0" width="600" align="center" bgcolor="#fdfdfd">
+    <tr>
+      <td width="600" valign="top" style="mso-table-lspace:0px; mso-table-rspace:0px mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+    <![endif]-->
+        
+    <!-- view in browser -->
+    <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+            <tr>
+                <td style="padding:20px 0px; background-color: #f7f7f7; font-size: 12px; line-height: 14px; text-align:center; color:#9c9c9c; margin:0px auto; " valign="top" align="center">
+                Não consegue visualizar? <a href="%%view_email_url%%" target="_blank" style="color:#292929; text-decoration:none;"><strong>Veja aqui</strong></a>.
+                </td>
+          </tr>
+    </table>
+
+      <!-- Header logos fixed  -->
+      <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; font-size: 0px !important;">
+          <tr style="font-size: 0;">
+              <td style="margin:0px auto">
+                <a href="https://pagbank.com.br/" target="_blank" style="text-decoration: none; border: none;" rel="noopener noreferrer" alias="Logo PagBank header">
+                 <img class="hide-mobile" src="https://p.simg.uol.com.br/crm/2024/Abr/Lt/s1p1/LT_SuspensaoDeChip_D30/logo-desk.png" title="PagBank" alt="PagBank" border="0"  width="600" style="width:100%; max-width: 600px; display: block; margin: 0px auto; border-radius:0px 0px 0px 0px" >
+                <!--[if !mso]><!-->
+                <img class="show-mobile" src="https://p.simg.uol.com.br/crm/2024/Abr/Lt/s1p1/LT_SuspensaoDeChip_D30/logo-mobile.png" title="PagBank" alt="PagBank" border="0"  style="width:0px; display: none; margin: 0px auto; border-radius:0px 0px 0px 0px">
+                <!--<![endif]-->
+                </a>
+              </td>
+          </tr>
+      </table>
+
+      <!-- Header IMG -->
+      <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+        <tr style="font-size: 0px !important;">
+            <td style="font-size: 0px !important;">
+                  <img src="https://p.simg.uol.com.br/crm/2026/Mai/ServicosDaConta/s1p1/Reativacao425dias/header-pj.png" title="O apoio que sua gestão financeira merece." alt="O apoio que sua gestão financeira merece." width="600" style="width: 100% !important; max-width: 600px !important; display: block; line-height: 100%;">
+                </td>
+            </tr>
+      </table>
+
+          <!-- Header headline -->
+           <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; font-size: 0px !important; background-color: #FDE526;">
+             <tr>
+              <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                  <td width="90%" align="center" style="padding: 18px 0%; font-size: 0px; mso-line-height-rule: exactly; line-height: 0;">
+                        <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" width="600" style="border-spacing: 0px; text-align: center; vertical-align:  top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif;">
+                        <tr>
+                         <td aria-hidden="true" role="presentation" style=" font-size: 0px; mso-line-height-rule: exactly; line-height: 0;"></td>
+                          <td width="540" style="max-width: 540px; font-size: 0px; mso-line-height-rule: exactly; line-height: 0;">
+                            <h1 role="text" class="fs-18" style="color:#434443; margin: 0 auto; font-size: 24px; line-height: 32px; text-align: center">
+                            Relembre como é bom ter um parceiro na hora de otimizar o seu negócio. 
+                            </h1>
+                          </td>
+                          <td aria-hidden="true" role="presentation" style=" font-size: 0px; mso-line-height-rule: exactly; line-height: 0;"></td>
+                        </tr>
+                        </table>
+                      </td>
+                       <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                    </tr>
+        </table>
+
+          <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; background-color: #ffffff;">
+            <tr>
+              <td width="5%" style="line-height: 0; font-size: 0;"></td>
+              <td width="90%" style="padding: 36px 0 32px; text-align: left; color: #545454">
+                <p role="text" class="fs-16" style="margin:0px; font-size: 18px; line-height: 28px; ">
+                 Conte com a gente<strong style="color: #292929;">%%=v(@John)=%%! 😊</strong>
+                </p>
+                <p role="text" class="fs-16" style="margin-top: 18px; font-size: 18px; line-height: 28px;">
+                Volte a ter mais eficiência operacional, organização nas cobranças e melhor gestão do fluxo de caixa de sua empresa com o PagBank. 
+                </p>
+              </td>
+              <td width="5%" style="line-height: 0; font-size: 0;"></td>
+            </tr>
+          </table>
+
+          <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; background-color: #ffffff;">
+            %%=TreatAsContent(@produtosHTML)=%%
+          </table>
+          
+              
+         
+          
+
+  <!-- text cta -->
+        <table align="center" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; font-size: 0px !important; background-color: #ffffff;">
+             <tr>
+              <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                  <td width="90%" align="center" style="padding: 40px 0%; font-size: 0px; mso-line-height-rule: exactly; line-height: 0;">
+                        <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" width="600" style="border-spacing: 0px; text-align: center; vertical-align:  top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif;">
+                        <tr>
+                         <td aria-hidden="true" role="presentation" style=" font-size: 0px; mso-line-height-rule: exactly; line-height: 0;"></td>
+                          <td width="380" style="max-width: 380px; font-size: 0px; mso-line-height-rule: exactly; line-height: 0;">
+                            <h2 role="text" class="fs-20" style="color:#292929; margin: 0 auto; font-size: 20px; line-height: 28px; text-align: center">
+                            Escolha uma solução e comece a usar agora no app PagBank.
+                            </h2>
+                          </td>
+                          <td aria-hidden="true" role="presentation" style=" font-size: 0px; mso-line-height-rule: exactly; line-height: 0;"></td>
+                        </tr>
+                        </table>
+                      </td>
+                       <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                    </tr>
+        </table>
+   
+
+        <!-- search -->
+        <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse"
+          style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;  background-color: #ececec;">
+          <tr>
+            <td width="5%" style="line-height: 0; font-size: 0;"></td>
+            <td width="90%" style="padding: 24px 0; margin: 0px auto; text-align: center; ">
+              <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse"
+                style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                <tr style="font-size: 0; line-height: 0;">
+                  <td style="width: 270px; display: inline-block; padding: 8px 0px;">
+                    <div class="text-center" style="font-size: 18px; line-height: 26px; text-align: left">
+                      <strong style="color: #292929;">
+                        Esse conteúdo foi <br>relevante para você?
+                      </strong>
+                    </div>
+                  </td>
+                  <td style="width: 270px; display: inline-block; padding: 8px 0px;">
+                    <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse"
+                      style="border-spacing: 0px; text-align: center; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                      <tr>
+                        <td>
+                          <div style="text-align: center; margin: 0px auto;">
+                            <!--[if mso | IE]>
+                                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width: 119px; height: 38px; v-text-anchor: middle;" arcsize="50%" fillcolor="#8a8a8a">
+                                      <w:anchorlock/>
+                                      <center style="color:#ffffff; font-family: Arial, sans-serif; font-size: 20px; font-weight:600;">
+                                    <![endif]-->
+                            <a class="" href="https://p.simg.uol.com.br/crm/2025/jun/investimentos/s1p1/Investimentos_RentabilizacaoCDB_107_Jun25/landingPage/landingPage_sim.html" style="background-color: #8A8A8A; color:#ffffff; text-decoration: none; font-size: 18px; font-weight: 600; font-family: Arial, sans-serif; padding: 8px 32px; border-radius: 32px; display: inline-block; vertical-align: middle;" target="_blank" aria-label="Sim" alias="CTA_Sim">
+                                  <span style="display: inline-block; vertical-align: middle; margin-bottom: 2px;">
+                                    <img src="https://p.simg.uol.com.br/crm/2025/jun/investimentos/s1p1/Investimentos_RentabilizacaoCDB_107_Jun25/check_sm.png"  alt="" border="0"  height="18" width="18" style="width: 18px; border: 0px; display: block; outline: none; margin: 0px auto; text-decoration: none; -ms-interpolation-mode: bicubic; line-height: 100%;">
+                                  </span>&nbsp;Sim
+                                      </a>
+                            <!--[if mso | IE]>
+                                        </center>
+                                      </v:roundrect>
+                                      <![endif]-->
+                          </div>
+                        </td>
+                        <td>
+                          <div style="text-align: center; margin: 0px auto;">
+                            <!--[if mso | IE]>
+                                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width: 119px; height: 38px; v-text-anchor: middle;" arcsize="50%" fillcolor="#8a8a8a">
+                                      <w:anchorlock/>
+                                      <center style="color:#ffffff; font-family: Arial, sans-serif; font-size: 20px; font-weight:600;">
+                                    <![endif]-->
+                            <a class="" href="https://p.simg.uol.com.br/crm/2025/jun/investimentos/s1p1/Investimentos_RentabilizacaoCDB_107_Jun25/landingPage/landingPage_nao.html" style="background-color: #8A8A8A; color:#ffffff; text-decoration: none; font-size: 18px; font-weight: 600; font-family: Arial, sans-serif; padding: 8px 32px; border-radius: 32px; display: inline-block; vertical-align: middle;" target="_blank" aria-label="Não" alias="CTA_Nao">
+                                  <span style="display: inline-block; vertical-align: middle; margin-bottom: 2px;">
+                                    <img src="https://p.simg.uol.com.br/crm/2025/jun/investimentos/s1p1/Investimentos_RentabilizacaoCDB_107_Jun25/blocked_sm.png"  alt="" border="0"  height="18" width="18" style="width: 18px; border: 0px; display: block; outline: none; margin: 0px auto; text-decoration: none; -ms-interpolation-mode: bicubic; line-height: 100%;">
+                                  </span>&nbsp;Não
+                                      </a>
+                            <!--[if mso | IE]>
+                                        </center>
+                                      </v:roundrect>
+                                      <![endif]-->
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td width="5%" style="line-height: 0; font-size: 0;"></td>
+          </tr>
+        </table>
+
+        <!-- Footer -->
+        <table alig="footer" cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse"
+          style="border-spacing: 0px; text-align: center; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+          <tr style="font-size: 0;">
+            <td style="padding:24px 0 0px; background-color: #f7f7f7;">
+              <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px">
+                <tr>
+                  <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                  <td width="90%" style="line-height: 0; font-size: 0; padding:0px 0 12px;">
+                    <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: center; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                      <tr>
+                        <td role="text" style="padding:0px 0px 24px; font-size: 14px; line-height: 18px; text-align: justify; color:#9c9c9c; white-space: wrap; ">
+                          Para mais informações, entre em contato com a nossa Central de Atendimento no telefone <a href="tel:40031775" target="_blank" style="text-decoration: none; color:#9c9c9c; border:none;" rel="noopener noreferrer" alias=""><strong>4003 1775</strong></a> (capitais e regiões
+                          metropolitanas)
+                          ou <a href="tel:08007282174" target="_blank" style="text-decoration: none; color:#9c9c9c; border:none;" rel="noopener noreferrer" alias=""><strong>0800-728-2174</strong></a> (Demais localidades) ou acesse a
+                          <a href="https://faq.pagbank.com.br/" target="_blank" style="text-decoration: none; color:#9c9c9c; border:none;" rel="noopener noreferrer" alias=""><strong><u>nossa FAQ</u></strong></a>. Caso não fique satisfeito com a solução apresentada, acione a Ouvidoria no
+                          <a href="08007282167" target="_blank" style="text-decoration: none; color:#9c9c9c; border:none;" rel="noopener noreferrer" alias=""><strong>0800 728 2167</strong></a>.
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="line-height: 0; font-size: 0px; padding: 1px; background-color: #e0e0e0;">&nbsp;</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                </tr>
+              </table>
+
+              <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                  <tr>
+                    <td width="5%" style="line-height: 0; font-size: 0;"></td>
+
+                    <td width="90%" style="line-height: 0; font-size: 0; vertical-align: middle;">
+                      <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse"
+                        style="border-spacing: 0px; text-align: left; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 540px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                        <tr style="font-size: 0;">
+
+                        <td width="360" style="width: 100%; max-width: 360px; display: inline-block; text-align: left;">
+                            <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; height: 44px;">
+                              <tr style="font-size: 0; ">
+                                <td stle="vertical-align: middle; height: 44px;">
+                                  <div role="text" style="font-size: 12px; line-height: 16px; color: #545454;">
+                                      <strong style="color:#292929">PagBank.</strong> <br>Seu negócio vende mais.
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+
+                          <td width="180" style="width: 100%; max-width: 180px; display: inline-block; text-align: left; ">
+                           <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: top; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly;">
+                            <tr style="font-size: 0; ">
+                              <td style="vertical-align: middle; height: 44px;">
+                                <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing: 0px; text-align: left; vertical-align: middle; margin: 0px auto; width: 100%; max-width: 600px; font-family: Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; mso-cellspacing:0; mso-cellpadding:0px; mso-padding-alt: 0px; mso-line-height-rule: exactly; ">
+                              <tr style="font-size: 0">
+                                <td style="width: 32px; vertical-align: middle">
+                                  <a href="https://www.facebook.com/pagbank/" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://p.simg.uol.com.br/crm/2023/Static/facebook.png" width="32" height="auto" alt="Facebook" title="Facebook" aria-label="Facebook" style="display: block; height: auto; border: 0; width: 32px;  min-width: 32px;">
+                                  </a>
+                                </td>
+
+                                <td style="font-size: 0; line-height: 0; padding-left: 2.5px; padding-right: 2.5px;"></td>
+
+                                <td style="width: 32px;">
+                                  <a href="https://www.instagram.com/pagbank/" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://p.simg.uol.com.br/crm/2023/Static/instagram.png" width="32" height="auto" alt="Instagram" title="Instagram" aria-label="Instagram" style="display: block; height: auto; border: 0; width: 32px;  min-width: 32px;">
+                                  </a>
+                                </td>
+
+                                <td style="font-size: 0; line-height: 0; padding-left: 2.5px; padding-right: 2.5px;"></td>
+
+                                <td style="width: 32px;">
+                                  <a href="https://www.youtube.com/@PagBank" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://p.simg.uol.com.br/crm/2023/Static/youtube.png" width="32" height="auto" alt="Youtube" title="Youtube" aria-label="Youtube" style="display: block; height: auto; border: 0; width: 32px;  min-width: 32px;">
+                                  </a>
+                                </td>
+
+                                <td style="font-size: 0; line-height: 0; padding-left: 2.5px; padding-right: 2.5px;"></td>
+
+
+                                <td style="width: 32px;">
+                                  <a href="https://www.linkedin.com/company/pagbank/" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://p.simg.uol.com.br/crm/2023/Static/linkedin.png" width="32" height="auto" alt="Linkedin" title="Linkedin" aria-label="Linkedin" style="display: block; height: auto; border: 0; width: 32px;  min-width: 32px;">
+                                  </a>
+                                </td>
+
+                                <td style="font-size: 0; line-height: 0; padding-left: 2.5px; padding-right: 2.5px;"></td>
+
+
+                                <td style="width: 32px;">
+                                  <a href="https://blogpagseguro.com.br/" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://p.simg.uol.com.br/crm/2023/Static/blog.png" width="32" height="auto" alt="Blog PagBank" title="Blog PagBank" aria-label="Blog do PagBank" style="display: block; height: auto; border: 0; width: 32px;  min-width: 32px;">
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+                              </td>
+                            </tr>
+                           </table>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+
+                    <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                  </tr>
+              </table>
+
+              
+
+              <table cellspacing="0" cellpadding="0" role="presentation" border-collapse="collapse" style="border-spacing:0px; text-align:center; vertical-align: middle; margin:0px auto; width:100%;">
+                <tr>
+                  <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                  <td width="90%" align="center" style="padding: 24px 0; text-align: center; margin: 0px auto; font-size: 12px; color: #696969; line-height: 16px;">
+                    Caso não queira mais receber nossos <span style="white-space: nowrap;">e-mails</span>, <a href="%%unsub_center_url%%" target="_blank" style="white-space: nowrap; color:#1b4597; text-decoration:none;">clique aqui</a>.
+                  </td>
+                  <td width="5%" style="line-height: 0; font-size: 0;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+
+        
+
+    <!--[if (gte mso 9)|(IE)|(mso 16)|(mso)]>
+    </td>
+    </tr>
+    </table>
+    <![endif]-->
+  </div>
+</body>
+</html>
