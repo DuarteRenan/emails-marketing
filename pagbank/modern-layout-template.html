@@ -1,21 +1,3 @@
-%%[
-  SET @nome = primeiro_nome
-  SET @p = '\d+'
-  SET @reg = RegExMatch(@nome, @p, 0)
-  SET @nome = ProperCase(@nome)
-
-  SET @Receiver = ""
-
-  IF NOT EMPTY(@nome) AND EMPTY(@reg) THEN
-    SET @Receiver = CONCAT(", ", @nome)
-  ENDIF
-
-  SET @emailname = AttributeValue('emailname_')
-  SET @jobid = AttributeValue('jobid')
-  SET @batchid = AttributeValue('_JobSubscriberBatchID')
-  SET @cod_tracking = Lookup('SRC_CUSTOMER', 'cod_tracking', 'cod_customer', _SubscriberKey)
-
-]%%
 <!DOCTYPE html>
 <html xml:lang="pt-BR" lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
   xmlns:o="urn:schemas-microsoft-com:office:office">
